@@ -36,9 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final _controller = AiryBottomSheetController(
     initialHeight: 100,
     magnetPoints: [
-      [100, 200],
-      [300, 400],
-      [500],
+      [100],
+      [200, 300],
+      [400, 500],
     ],
     maxHeight: 530,
     minHeight: 80,

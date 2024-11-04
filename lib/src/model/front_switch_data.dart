@@ -4,6 +4,22 @@ import 'dart:math';
 final class FrontSwitchData {
   FrontSwitchData(this._closestIndex, this.nextIndex, this._distanceRatio);
 
+  FrontSwitchData.empty() : this(0, 0, 1);
+
+  @override
+  bool operator ==(Object other) {
+    return other.runtimeType == runtimeType &&
+        other is FrontSwitchData &&
+        hashCode == other.hashCode &&
+        _closestIndex == other._closestIndex &&
+        nextIndex == other.nextIndex &&
+        isSameIndex == other.isSameIndex &&
+        _distanceRatio == other._distanceRatio;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, _closestIndex, nextIndex, _distanceRatio);
+
   /// index of the [AiryBottomSheet.switchChildren] closest to [AiryBottomSheetController.height]
   int _closestIndex;
 

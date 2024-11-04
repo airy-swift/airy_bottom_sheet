@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:airy_bottom_sheet/src/controller/airy_bottom_sheet_value.dart';
+import 'package:airy_bottom_sheet/src/extension/list_double.dart';
 import 'package:flutter/material.dart';
 
 final class AiryBottomSheetController extends ValueNotifier<AiryBottomSheetValue> {
@@ -14,12 +15,14 @@ final class AiryBottomSheetController extends ValueNotifier<AiryBottomSheetValue
           magnetPoints: magnetPoints,
         ));
 
+  /// ------------------------------------------------------------
+  /// bottom sheet handling properties
+  /// ------------------------------------------------------------
+
   final double? maxHeight;
   final double minHeight;
 
   double get height => value.height;
-
-  bool get grabbingHandle => value.grabbingHandle;
 
   set height(double v) {
     final heightValue = max<double>(0, v);
@@ -27,28 +30,38 @@ final class AiryBottomSheetController extends ValueNotifier<AiryBottomSheetValue
     value = value.copyWith(height: result);
   }
 
-  set grabbingHandle(bool v) {
-    value = value.copyWith(grabbingHandle: v);
-  }
-
+  /// update [value.magnetPoints] and correct [value.height]
   set magnetPoints(List<List<double>> v) {
     final currentHeight = value.height;
-
     final flatten = v.expand((v) => v);
+
     assert(flatten.isNotEmpty);
+    assert(flatten.isAscending);
+    assert(minHeight <= flatten.first);
+    assert(flatten.last <= (maxHeight ?? double.infinity));
+
     final closest = flatten.reduce((lhs, rhs) => (lhs - currentHeight).abs() < (rhs - currentHeight).abs() ? lhs : rhs);
     value = value.copyWith(magnetPoints: v, height: closest);
   }
+
+  /// ------------------------------------------------------------
+  /// drag properties
+  /// ------------------------------------------------------------
 
   double? dragStartHeightCache;
   double? dragUpdateStartCache;
   bool isDragging = false;
 
-  void _clearProperties() {
+  @visibleForTesting
+  void clearDragProperties() {
     isDragging = false;
     dragStartHeightCache = null;
     dragUpdateStartCache = null;
   }
+
+  /// ------------------------------------------------------------
+  /// drag events
+  /// ------------------------------------------------------------
 
   void onDragStart(PointerDownEvent? event) {
     isDragging = true;
@@ -57,7 +70,7 @@ final class AiryBottomSheetController extends ValueNotifier<AiryBottomSheetValue
 
   void onVerticalDragUpdate(DragUpdateDetails details) {
     if (isDragging == false) {
-      _clearProperties();
+      clearDragProperties();
       return;
     }
     dragUpdateStartCache ??= details.localPosition.dy;
@@ -65,7 +78,7 @@ final class AiryBottomSheetController extends ValueNotifier<AiryBottomSheetValue
   }
 
   void onVerticalDragEnd(DragEndDetails details) {
-    _clearProperties();
+    clearDragProperties();
     final closestHeight = value.magnetPoints[value.frontSwitchData.closestIndex].reduce(
       (lhs, rhs) => (lhs - height).abs() < (rhs - height).abs() ? lhs : rhs,
     );

@@ -2,7 +2,7 @@ import 'package:airy_bottom_sheet/airy_bottom_sheet.dart';
 import 'package:airy_bottom_sheet/src/ui/front_swticher.dart';
 import 'package:flutter/material.dart';
 
-final class AiryBottomSheet<T> extends StatefulWidget {
+final class AiryBottomSheet extends StatefulWidget {
   const AiryBottomSheet._({
     required this.controller,
     required this.handle,
@@ -17,15 +17,15 @@ final class AiryBottomSheet<T> extends StatefulWidget {
 
   static Future<void> show(
     GlobalKey<ScaffoldState> scaffoldKey, {
-    required AiryBottomSheetController controller,
-    Widget handle = const SizedBox.shrink(),
     BorderRadius borderRadius = const BorderRadius.vertical(top: Radius.circular(12)),
     double elevation = 10,
-    void Function(double)? onDragAndAnimationEnd,
     Color backgroundColor = Colors.white,
     bool awaitClose = true,
     Duration dragUpdateDuration = const Duration(milliseconds: 30),
     Duration dragEndDuration = const Duration(milliseconds: 100),
+    void Function(double)? onDragAndAnimationEnd,
+    Widget handle = const SizedBox.shrink(),
+    required AiryBottomSheetController controller,
     required List<Widget> switchChildren,
   }) async {
     final ref = scaffoldKey.currentState?.showBottomSheet(
