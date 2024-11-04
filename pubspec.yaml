@@ -1,7 +1,8 @@
 name: airy_bottom_sheet
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: "AiryBottomSheet is a very easy-to-use and stylish BottomSheet that seamlessly switches widgets by scrolling through the BottomSheet and adjusts like a magnet to the specified height when released."
+version: 1.0.0
+homepage: https://x.com/airy_jingo
+### https://www.airy-note.com/
 
 environment:
   sdk: ^3.5.0
